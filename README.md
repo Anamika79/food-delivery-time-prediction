@@ -1,76 +1,94 @@
-# Food Delivery Time Prediction
-A machine learning project that analyzes food delivery data and develops predictive models to estimate delivery time based on factors such as delivery distance, traffic conditions, weather, vehicle type, and delivery personnel characteristics.
-**Python · Google Colab · Machine Learning · Scikit-learn**
+# Food Delivery Time Prediction & Late-Delivery Classification
 
-## 1. Project Overview
+Predicting how long an Indian food delivery order will take (regression) and flagging orders at risk of delay (classification), using **Linear Regression** and a tuned **Decision Tree**.
 
-Accurately estimating food delivery time is important for improving customer satisfaction and optimizing delivery operations. However, delivery time can be influenced by several factors, including traffic congestion, weather conditions, distance, and vehicle condition.
+## Overview
 
-This project aims to develop a machine learning-based solution to predict food delivery time (in minutes) using historical delivery data.
+This project works on a single dataset of Indian food delivery orders and solves two related tasks:
 
-The project explores the relationship between delivery-related features and delivery duration through data preprocessing, exploratory data analysis, feature engineering, and predictive modelling.
+| Task | Model | Target |
+|---|---|---|
+| Regression | Linear Regression (OLS) | `Time_taken(min)` – delivery time in minutes |
+| Classification | Decision Tree (tuned with GridSearchCV) | `Delivery_Status` – On-time / Delayed |
 
-## 2. Objectives
+An order is labelled **Delayed** if its delivery time is above the median delivery time of the **training set**, and **On-time** otherwise. This gives two roughly balanced classes. Note that "Delayed" here means *slower than typical*, not late against a promised delivery time.
 
-- Analyze the factors influencing food delivery time.
-- Perform data cleaning, preprocessing, and exploratory data analysis.
-- Engineer meaningful features, including geographical delivery distance and order-time attributes.
-- Develop and compare machine learning models for delivery time prediction.
-- Evaluate model performance using appropriate regression metrics.
+Both models use the same train/test split so they can be compared fairly.
 
-## 3. Dataset
+## Dataset
 
-The project uses a food delivery dataset containing information about orders, delivery personnel, restaurants, delivery locations, weather, traffic, and delivery duration.
+- **Source:** [Food Delivery Dataset by Gaurav Malik (Kaggle)](https://www.kaggle.com/datasets/gauravmalik26/food-delivery-dataset)
+- **Size:** about 45,000 orders from Indian cities
+- **File used:** `train.csv` only (`test.csv` has no delivery times)
+- **Columns:** delivery partner age and ratings, restaurant and delivery coordinates, order date and times, weather, road traffic density, vehicle condition, order type, vehicle type, multiple deliveries, festival, city type, and `Time_taken(min)`
 
-_Dataset source: Kaggle – Food Delivery Dataset_
+The dataset is not included in this repository. Download `train.csv` from Kaggle and place it in the project folder (or upload it in Colab when prompted).
 
-## 4. Technologies and Libraries
+## Methodology
 
-Python, Google Colab, Pandas, Numpy, Matplotlib, Seaborn, Scikit learn
+1. **Data cleaning**
+   - Stripped trailing whitespace and converted the text `"NaN "` into real null values
+   - Extracted the number from `Time_taken(min)` values such as `"(min) 24"`
+   - Removed the `"conditions "` prefix from `Weatherconditions`
+   - Converted age, ratings and multiple deliveries to numeric types
+   - Removed duplicate orders
+2. **Invalid records:** removed rows with zero or negative coordinates and partner ratings above 5; checked extreme values with the IQR method
+3. **Feature engineering**
+   - Delivery distance in km from restaurant and delivery coordinates (Haversine formula)
+   - Order preparation time (pickup time minus order time, handling midnight crossover)
+   - Order hour, day of week and weekend flag
+4. **Train/test split:** 80/20, fixed random seed, stratified so both classes keep the same proportion
+5. **Preprocessing (fitted on the training set only, to avoid data leakage)**
+   - Median imputation for numeric columns, mode imputation for categorical columns
+   - Ordinal encoding for `Road_traffic_density` (Low < Medium < High < Jam)
+   - One-hot encoding for weather, vehicle type, order type, city and festival
+   - `StandardScaler` for Linear Regression only (trees do not need scaling)
+6. **Linear Regression:** trained on scaled features; checked residual plots, Q-Q plot, coefficients and VIF (multicollinearity)
+7. **Decision Tree:** trained an untuned tree to show overfitting, then tuned `criterion`, `max_depth`, `min_samples_split` and `min_samples_leaf` with `GridSearchCV` (5-fold stratified CV, scored on F1)
 
-## 5. Project Workflow
+## Results
 
-The project follows a structured machine learning workflow:
+All numbers below are on the held-out test set (8,300 orders).
 
-1. **Data Collection:** Load and inspect the food delivery dataset.
-2. **Data Cleaning:** Handle missing values, duplicates, inconsistent formats, and invalid records.
-3. **Exploratory Data Analysis (EDA):** Investigate delivery-time distributions and relationships between features.
-4. **Feature Engineering:** Calculate geographical distance using the Haversine formula and extract useful time-based features.
-5. **Data Preparation:** Separate features and target variables, split the dataset into training and testing sets, and build preprocessing pipelines.
-6. **Model Development:** Train and compare suitable machine learning regression models.
-7. **Model Evaluation:** Assess predictive performance using regression evaluation metrics.
+### Linear Regression (delivery time in minutes)
 
-## 6. Feature Engineering and Preprocessing
+| Metric | Train | Test |
+|---|---|---|
+| MAE (min) | 4.849 | 4.840 |
+| RMSE (min) | 6.072 | 6.033 |
+| R² | 0.583 | 0.580 |
 
-Some of the key preprocessing techniques implemented include:
+The near-identical train and test scores show no overfitting. The model explains about 58% of the variation in delivery time, and predictions are off by roughly 5 minutes on average.
 
-- Conversion of categorical and numerical data into appropriate formats.
-- Handling missing values using median and most-frequent imputation.
-- Encoding ordinal features using `OrdinalEncoder`.
-- Encoding nominal features using `OneHotEncoder`.
-- Feature scaling using `StandardScaler` for Linear Regression.
-- Calculation of restaurant-to-delivery distance using the Haversine formula.
-- Extraction of order hour, day of the week, and weekend indicators.
-- Development of separate preprocessing pipelines for Decision Tree and Linear Regression models.
+### Decision Tree classifier (On-time / Delayed)
 
-## 7. Results and Visualizations
+| Metric | Test |
+|---|---|
+| Accuracy | 0.8551 |
+| Precision (Delayed) | 0.8757 |
+| Recall (Delayed) | 0.7949 |
+| F1-score (Delayed) | 0.8333 |
+| ROC-AUC | 0.9315 |
 
-Planned visualizations include:
+Train accuracy is 0.8645 against a test accuracy of 0.8551, a gap of about 1 point, so tuning controlled overfitting.
 
-- Distribution of delivery times.
-- Delivery time across different traffic conditions.
-- Impact of weather and vehicle type on delivery duration.
-- Correlation heatmap of numerical features.
-- Comparison of actual and predicted delivery times.
+| Class | Precision | Recall | F1 | Support |
+|---|---|---|---|---|
+| On-time | 0.84 | 0.91 | 0.87 | 4517 |
+| Delayed | 0.88 | 0.79 | 0.83 | 3783 |
 
-Model performance will be reported using appropriate regression metrics such as:
+The tree misses roughly 1 in 5 truly delayed orders (Delayed recall 0.79), which is its main limitation.
 
-- Mean Absolute Error (MAE)
-- Mean Squared Error (MSE)
-- Root Mean Squared Error (RMSE)
-- R² Score
+## Tools
 
-## 8. Author
+Python, Pandas, NumPy, Scikit-learn, Statsmodels, Matplotlib, Seaborn, Google Colab
+
+## Acknowledgements
+
+Dataset by Gaurav Malik on Kaggle.
+
+
+## Author
 
 Anamika J
 - GitHub: github.com/Anamika79
