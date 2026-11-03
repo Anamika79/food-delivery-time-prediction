@@ -32,13 +32,13 @@ Python, Google Colab, Pandas, Numpy, Matplotlib, Seaborn, Scikit learn
 
 The project follows a structured machine learning workflow:
 
-**Data Collection**: Load and inspect the food delivery dataset.
-**Data Cleaning**: Handle missing values, duplicates, inconsistent formats, and invalid records.
-**Exploratory Data Analysis (EDA)**: Investigate delivery-time distributions and relationships between features.
-**Feature Engineering**: Calculate geographical distance using the Haversine formula and extract useful time-based features.
-**Data Preparation**: Separate features and target variables, split the dataset into training and testing sets, and build preprocessing pipelines.
-**Model Development**: Train and compare suitable machine learning regression models.
-**Model Evaluation**: Assess predictive performance using regression evaluation metrics.
+1. **Data Collection:** Load and inspect the food delivery dataset.
+2. **Data Cleaning:** Handle missing values, duplicates, inconsistent formats, and invalid records.
+3. **Exploratory Data Analysis (EDA):** Investigate delivery-time distributions and relationships between features.
+4. **Feature Engineering:** Calculate geographical distance using the Haversine formula and extract useful time-based features.
+5. **Data Preparation:** Separate features and target variables, split the dataset into training and testing sets, and build preprocessing pipelines.
+6. **Model Development:** Train and compare suitable machine learning regression models.
+7. **Model Evaluation:** Assess predictive performance using regression evaluation metrics.
 
 ## 6. Feature Engineering and Preprocessing
 
