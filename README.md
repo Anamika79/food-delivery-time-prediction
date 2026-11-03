@@ -12,11 +12,11 @@ The project explores the relationship between delivery-related features and deli
 
 ## 2. Objectives
 
--Analyze the factors influencing food delivery time.
--Perform data cleaning, preprocessing, and exploratory data analysis.
--Engineer meaningful features, including geographical delivery distance and order-time attributes.
--Develop and compare machine learning models for delivery time prediction.
--Evaluate model performance using appropriate regression metrics.
+- Analyze the factors influencing food delivery time.
+- Perform data cleaning, preprocessing, and exploratory data analysis.
+- Engineer meaningful features, including geographical delivery distance and order-time attributes.
+- Develop and compare machine learning models for delivery time prediction.
+- Evaluate model performance using appropriate regression metrics.
 
 ## 3. Dataset
 
@@ -44,36 +44,36 @@ The project follows a structured machine learning workflow:
 
 Some of the key preprocessing techniques implemented include:
 
--Conversion of categorical and numerical data into appropriate formats.
--Handling missing values using median and most-frequent imputation.
--Encoding ordinal features using OrdinalEncoder.
--Encoding nominal features using OneHotEncoder.
--Feature scaling using StandardScaler for Linear Regression.
--Calculation of restaurant-to-delivery distance using the Haversine formula.
--Extraction of order hour, day of the week, and weekend indicators.
--Separate preprocessing pipelines are developed for Decision Tree and Linear Regression models.
+- Conversion of categorical and numerical data into appropriate formats.
+- Handling missing values using median and most-frequent imputation.
+- Encoding ordinal features using `OrdinalEncoder`.
+- Encoding nominal features using `OneHotEncoder`.
+- Feature scaling using `StandardScaler` for Linear Regression.
+- Calculation of restaurant-to-delivery distance using the Haversine formula.
+- Extraction of order hour, day of the week, and weekend indicators.
+- Development of separate preprocessing pipelines for Decision Tree and Linear Regression models.
 
 ## 7. Results and Visualizations
 
 Planned visualizations include:
 
--Distribution of delivery times.
--Delivery time across different traffic conditions.
--Impact of weather and vehicle type on delivery duration.
--Correlation heatmap of numerical features.
--Comparison of actual and predicted delivery times.
+- Distribution of delivery times.
+- Delivery time across different traffic conditions.
+- Impact of weather and vehicle type on delivery duration.
+- Correlation heatmap of numerical features.
+- Comparison of actual and predicted delivery times.
 
 Model performance will be reported using appropriate regression metrics such as:
 
--Mean Absolute Error (MAE)
--Mean Squared Error (MSE)
--Root Mean Squared Error (RMSE)
--R² Score
+- Mean Absolute Error (MAE)
+- Mean Squared Error (MSE)
+- Root Mean Squared Error (RMSE)
+- R² Score
 
 ## 8. Author
 
 Anamika J
--GitHub: github.com/Anamika79
--LinkedIn: linkedin.com/in/anamika-j
+- GitHub: github.com/Anamika79
+- LinkedIn: linkedin.com/in/anamika-j
 
 _This project is developed as part of a hands-on exploration of machine learning, data analysis, and predictive modelling._
